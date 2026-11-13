@@ -95,7 +95,7 @@ class PathFinder:
             for neighbor in self.graph.neighbors(current):
                 new_cost = cost + self.graph.cost_into(neighbor)
 
-			# use negative values to count prio-zones in path
+                # use negative values to count prio-zones in path
                 new_priority_count = priority_count
                 if neighbor.zone_type == ZoneType.PRIORITY:
                     new_priority_count -= 1

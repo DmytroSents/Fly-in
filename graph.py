@@ -5,7 +5,7 @@ from header import Map, Zone, Connection
 
 
 class Graph:
-    #represent zones and connections between 'em
+    # represent zones and connections between 'em
 
     def __init__(self, map_data: Map) -> None:
         self.map = map_data
@@ -36,7 +36,7 @@ class Graph:
             self.adjacency[zone_a].append(connection)
             self.adjacency[zone_b].append(connection)
 
-	# Get()-ters
+    # Get()-ters
     def nb_drones(self) -> int:
         return self.map.nb_drones
 
@@ -47,15 +47,15 @@ class Graph:
         return len(self.map.connections)
 
     def start(self) -> Zone:
-        #starting zone
+        # starting zone
         return self.map.start
 
     def goal(self) -> Zone:
-        #end-zone
+        # end-zone
         return self.map.end
 
     def zone(self, name: str) -> Zone:
-        #zone by name
+        # zone by name
         return self.map.get_zone(name)
 
     def is_blocked(self, zone: Zone) -> bool:
@@ -80,7 +80,7 @@ class Graph:
     def link(
         self, zone_a: Zone, zone_b: Zone
     ) -> Optional[Connection]:
-        #find connection between two zones
+        # find connection between two zones
         key = (zone_a.name, zone_b.name)
         return self.connections.get(key)
 
@@ -102,5 +102,5 @@ class Graph:
     def find_connection(
         self, zone_a: Zone, zone_b: Zone
     ) -> Optional[Connection]:
-        #find connection (any direction)
+        # find connection (any direction)
         return self.link(zone_a, zone_b)

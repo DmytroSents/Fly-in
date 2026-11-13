@@ -1,32 +1,26 @@
-NAME = fly_in
-CXX = g++
-CXXFLAGS = -std=c++20 -Wall -Wextra -pedantic -O3
+all: run
 
-HEADERS = flying.hpp graph.hpp parsing.hpp bfs_cost.hpp		\
-	greedy_planner.hpp simulator.hpp map_check.hpp plan_ner.hpp
+install:
+	uv sync
 
-all: $(NAME)
+run:
+	uv run python fly-in.py
 
-$(NAME): main.cpp $(HEADERS) Makefile
-	$(CXX) $(CXXFLAGS) main.cpp -o $(NAME)
-
-run: $(NAME)
-	./$(NAME) ../maps/medium/01_dead_end_trap.txt
-
-debug: CXXFLAGS += -g -O0
-debug: fclean $(NAME)
-	gdb ./$(NAME)
-
-sanitize: CXXFLAGS += -fsanitize=address -fno-omit-frame-pointer -g
-sanitize: fclean $(NAME)
-	./$(NAME) ../maps/medium/01_dead_end_trap.txt
+debug:
+	uv run python -m pdb fly-in.py
 
 clean:
-	@rm -f *.o
+	rm -rf __pycache__
+	rm -rf .mypy_cache
+	rm -rf .pytest_cache
+	find . -type d -name "__pycache__" -exec rm -rf {} +
 
-fclean:
-	@rm -f $(NAME)
+lint:
+	uv run flake8 *.py
+	uv run mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
-re: fclean all
+lint-strict:
+	uv run flake8 .
+	uv run mypy . --strict
 
-.PHONY: all run debug sanitize clean fclean re
+.PHONY: all install run debug clean lint lint-strict

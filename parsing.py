@@ -3,10 +3,10 @@ from header import Connection, Map, Zone, ZoneType
 
 
 class ParseError(Exception):
-    #if malformed map_file
+    # if malformed map_file
 
     def __init__(self, line: int, message: str) -> None:
-        #the line number and message
+        # the line number and message
         if line > 0:
             text = "line " + str(line) + ": " + message
         else:
@@ -15,14 +15,14 @@ class ParseError(Exception):
 
 
 class MapParser:
-    #check file line by line
+    # check file line by line
 
     ZONE_KEYWORDS = ["start_hub", "end_hub", "hub"]
     ZONE_META_KEYS = ["zone", "color", "max_drones"]
     LINK_META_KEYS = ["max_link_capacity"]
 
     def __init__(self) -> None:
-        #create a parser with empty fields
+        # create a parser with empty fields
         self.line_no = 0
         self.nb_drones = 0          # 0 means: not defined yet
         self.zones: dict[str, Zone] = {}
@@ -32,7 +32,7 @@ class MapParser:
         self.end: Optional[Zone] = None
 
     def parse_file(self, path: str) -> Map:
-        #read the file `path` and return the Map
+        # read the file `path` and return the Map
         try:
             with open(path, encoding="utf-8") as file:
                 text = file.read()
@@ -55,11 +55,11 @@ class MapParser:
         return self.build_map()
 
     def fail(self, message: str) -> NoReturn:
-        #if Error == stop
+        # if Error == stop
         raise ParseError(self.line_no, message)
 
     def parse_line(self, key: str, body: str) -> None:
-        #checks non-empty line
+        # checks non-empty line
         if self.nb_drones == 0:
             if key != "nb_drones":
                 self.fail("first line must be 'nb_drones: <int>'")
@@ -74,7 +74,7 @@ class MapParser:
             self.fail("unknown key'" + key + "'")
 
     def parse_zone(self, keyword: str, body: str) -> None:
-        #check a hub-line and add to Zone
+        # check a hub-line and add to Zone
         head, meta = self.split_metadata(body, self.ZONE_META_KEYS)
         fields = head.split()
         if len(fields) != 3:
@@ -107,7 +107,7 @@ class MapParser:
         self.zones[name] = zone
 
     def parse_connection(self, body: str) -> None:
-        #check a connection line and add the connection
+        # check a connection line and add the connection
         head, meta = self.split_metadata(body, self.LINK_META_KEYS)
         usage = "expected 'connection: <zone1>-<zone2> [metadata]'"
         names = head.split("-")
@@ -139,7 +139,7 @@ class MapParser:
         self.connections.append(connection)
 
     def build_map(self) -> Map:
-        #run the checks that need and create the Map
+        # run the checks that need and create the Map
         if self.nb_drones == 0:
             raise ParseError(0, "missing 'nb_drones' (file empty?)")
         if self.start is None:
@@ -152,7 +152,7 @@ class MapParser:
     def split_metadata(
         self, body: str, allowed: list[str]
     ) -> tuple[str, dict[str, str]]:
-        #split 'main part [k=v k=v]' into the main part and a dict
+        # split 'main part [k=v k=v]' into the main part and a dict
         head, bracket, tail = body.partition("[")
         if bracket == "":
             return head.strip(), {}
@@ -171,7 +171,7 @@ class MapParser:
         return head.strip(), meta
 
     def integer(self, text: str, what: str) -> int:
-        #try convert <str> to <int>
+        # try convert <str> to <int>
         message = what + " must be an integer, got '" + text + "'"
         try:
             return int(text)
@@ -179,14 +179,14 @@ class MapParser:
             self.fail(message)
 
     def positive_int(self, text: str, what: str) -> int:
-        #like above but reject negatives
+        # like above but reject negatives
         value = self.integer(text, what)
         if value < 1:
             self.fail(what + " must be positive, got " + str(value))
         return value
 
     def zone_type(self, text: str) -> ZoneType:
-        #turn text into a ZoneType, or reject if its invalid
+        # turn text into a ZoneType, or reject if its invalid
         try:
             return ZoneType(text)
         except ValueError:

@@ -25,7 +25,7 @@ class Zone:
         self.max_drones = max_drones
 
     def is_blocked(self) -> bool:
-        #simple comparison, that returns True (if it's true)
+        # simple comparison, that returns True (if it's true)
         return self.zone_type == ZoneType.BLOCKED
 
     def movement_cost(self) -> int:
@@ -35,7 +35,7 @@ class Zone:
 
 
 class Connection:
-    #connection goes two-ways
+    # connection goes two-ways
 
     def __init__(
         self, zone_a: Zone, zone_b: Zone, max_link_capacity: int = 1
@@ -72,7 +72,7 @@ class Map:
 
 
 class Drone:
-    #used in simulation and for printing stuff
+    # used in simulation and for printing stuff
 
     def __init__(self, number: int, start: Zone) -> None:
         self.number = number
@@ -84,13 +84,13 @@ class Drone:
         self.finished = False
 
     def take_off(self, destination: Zone, connection: Connection) -> None:
-        #start a 2-turn flight toward a restricted zone
+        # start a 2-turn flight toward a restricted zone
         self.in_flight = True
         self.destination = destination
         self.connection = connection
 
     def land(self) -> None:
-        #finish flight and move the drone to its destination
+        # finish flight and move the drone to its destination
         if not self.in_flight or self.destination is None:
             raise ValueError("drone is not in flight")
 
@@ -100,5 +100,5 @@ class Drone:
         self.connection = None
 
     def finish(self) -> None:
-       #when drone reached the end zone
+        # when drone reached the end zone
         self.finished = True
